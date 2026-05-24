@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ContextProvider } from "@/context/PokemonContext";
+import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,7 +26,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body>{children}</body>
+      
+      <body>
+        <Link href={"/"}>Home</Link>
+        <Link href={"/favorites"}>Favoritos</Link>
+      <ContextProvider>{children}</ContextProvider>
+      </body>
     </html>
   );
 }

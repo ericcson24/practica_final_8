@@ -1,66 +1,65 @@
-import Image from "next/image";
+"use client"
 import styles from "./page.module.css";
+import { useEffect, useState } from "react";
+import { MiniPokemon } from "@/lib/types";
+import { GetMiniPokemon, SearchPokemons } from "@/lib/api";
+import PokemonCard from "@/components/PokemonCard";
+
+import Paginator from "@/components/Paginator";
 
 export default function Home() {
+
+  const [loading,setloading]=useState<boolean>(true)
+  const [error,seterror]=useState<string>("")
+
+  const [MiniPokemons,setMiniPokemons]=useState<MiniPokemon[]|null>(null)
+
+  const [page,setPage]=useState<number>(1)
+  const [totalpages,setTotalPage]=useState<number>(1)
+  const [busqueda,setbusqueda]=useState<string>("")
+
+  useEffect(()=>{
+    const getpokemonsandSprites=async ()=>{
+      setloading(true)
+      try{
+        if(!busqueda.trim()){
+        const data= await GetMiniPokemon(page)
+        setMiniPokemons(data.results)      
+        setTotalPage(data.count)}
+        else{
+          const query = busqueda.trim().toLowerCase()
+          const data = await SearchPokemons(query)
+          setMiniPokemons(data)
+        }
+      }catch{
+        seterror("Error al cargar pokemons")
+
+      }finally{
+        setloading(false)
+
+      }
+    }
+    getpokemonsandSprites()
+  },[page,busqueda])
+
+  
+
   return (
     <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      <div>
+        <input placeholder="Buscar Pokemons" onChange={(e)=>setbusqueda(e.target.value)}/>
+      </div>
+
+      <h1>Pokemons:</h1>
+      {loading && <p>cargando...</p>}
+      {error && <p>{error}</p>}
+      {!loading && !error && MiniPokemons && (<ul className={styles.grid}>
+        
+        {MiniPokemons.map((e)=><PokemonCard key={e.name} miniPokemon={e} />)}
+      </ul>)}
+      {page>0 &&!busqueda && (<ul>
+        <Paginator totalPages={totalpages} currentPage={page} setPage={setPage}/>
+      </ul>)}
     </div>
   );
 }
