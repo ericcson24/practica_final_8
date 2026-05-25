@@ -1,5 +1,7 @@
 "use client"
 
+import styles from "./Paginator.module.css"
+
 type PaginatorStruct = {
     totalPages:number,
     currentPage:number,
@@ -13,13 +15,13 @@ export default function Paginator({totalPages,currentPage, setPage}:PaginatorStr
     const hasPrevious= currentPage>20
 
     return (
-        <div>
-            {hasNext&&(<ul>
-                <button onClick={()=>setPage(currentPage+20)}>Siguiente</button>
-            </ul>)}
-            {hasPrevious&&(<ul>
-                <button onClick={()=>setPage(currentPage-20)}>Anterior</button>
-            </ul>)}
+        <div className={styles.paginator}>
+            {hasPrevious && (
+                <button className={styles.btn} onClick={() => setPage(currentPage - 20)}>← Anterior</button>
+            )}
+            {hasNext && (
+                <button className={styles.btn} onClick={() => setPage(currentPage + 20)}>Siguiente →</button>
+            )}
         </div>
     )
 }

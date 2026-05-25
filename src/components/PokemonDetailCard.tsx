@@ -2,6 +2,7 @@
 
 import { usePokemon } from "@/context/PokemonContext"
 import { MiniPokemon, PokemonDetail } from "@/lib/types"
+import styles from "./PokemonDetailCard.module.css"
 
 type PokemonStruct = {
     PokemonDetail: PokemonDetail
@@ -19,15 +20,29 @@ export default function PokemonDetailCard({PokemonDetail}:PokemonStruct){
     }
 
     return (
-        <div>
-            <h1>{PokemonDetail.name}</h1>
-            <img src={PokemonDetail.sprites.back_default} alt={PokemonDetail.name} />
-            <p>ID: {PokemonDetail.id}</p>
-            <p>Peso: {PokemonDetail.weight}</p>
-            <p>Experiencia base: {PokemonDetail.base_experience}</p>
-            <div>
-                {!isFav && (<button onClick={()=>FavoritesListPush(miniPokemon)}>Agregar a favorites</button>)}
-                {isFav && (<button onClick={()=>FavoritesListPop(miniPokemon)}>Quitar de favorites</button>)}
+        <div className={styles.card}>
+            <div className={styles.cardHeader}>
+                <div className={styles.imageWrapper}>
+                    <img src={PokemonDetail.sprites.back_default} alt={PokemonDetail.name} />
+                </div>
+                <h1 className={styles.name}>{PokemonDetail.name}</h1>
+                <span className={styles.badge}>#{PokemonDetail.id}</span>
+            </div>
+            <div className={styles.cardBody}>
+                <ul className={styles.statList}>
+                    <li className={styles.statItem}>
+                        <span className={styles.statLabel}>Peso</span>
+                        <span className={styles.statValue}>{PokemonDetail.weight} kg</span>
+                    </li>
+                    <li className={styles.statItem}>
+                        <span className={styles.statLabel}>Exp. base</span>
+                        <span className={styles.statValue}>{PokemonDetail.base_experience} XP</span>
+                    </li>
+                </ul>
+                {!isFav
+                    ? <button className={styles.btnAdd} onClick={() => FavoritesListPush(miniPokemon)}>+ Agregar a favoritos</button>
+                    : <button className={styles.btnRemove} onClick={() => FavoritesListPop(miniPokemon)}>✕ Quitar de favoritos</button>
+                }
             </div>
         </div>
     )

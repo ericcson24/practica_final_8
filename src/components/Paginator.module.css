@@ -1,0 +1,27 @@
+.paginator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 40px;
+  padding-bottom: 40px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 24px;
+  border: 2px solid var(--color-secondary);
+  border-radius: var(--radius-sm);
+  background: var(--color-card);
+  color: var(--color-secondary);
+  font-size: 14px;
+  font-weight: 700;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn:hover {
+  background: var(--color-secondary);
+  color: #fff;
+}

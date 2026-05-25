@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { MiniPokemon } from "@/lib/types";
 import { GetMiniPokemon, SearchPokemons } from "@/lib/api";
 import PokemonCard from "@/components/PokemonCard";
-
 import Paginator from "@/components/Paginator";
+import Link from "next/link";
 
 export default function Home() {
 
@@ -46,20 +46,26 @@ export default function Home() {
 
   return (
     <div className={styles.page}>
-      <div>
-        <input placeholder="Buscar Pokemons" onChange={(e)=>setbusqueda(e.target.value)}/>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Pokémon <span>Dex</span></h1>
+        <Link href="/favorites" className={styles.favLink}>★ Favoritos</Link>
       </div>
 
-      <h1>Pokemons:</h1>
-      {loading && <p>cargando...</p>}
-      {error && <p>{error}</p>}
-      {!loading && !error && MiniPokemons && (<ul className={styles.grid}>
-        
-        {MiniPokemons.map((e)=><PokemonCard key={e.name} miniPokemon={e} />)}
-      </ul>)}
-      {page>0 &&!busqueda && (<ul>
-        <Paginator totalPages={totalpages} currentPage={page} setPage={setPage}/>
-      </ul>)}
+      <div className={styles.searchWrapper}>
+        <span className={styles.searchIcon}>🔍</span>
+        <input placeholder="Buscar pokémon..." onChange={(e) => setbusqueda(e.target.value)} />
+      </div>
+
+      {loading && <p className={styles.status}>Cargando...</p>}
+      {error && <p className={`${styles.status} ${styles.error}`}>{error}</p>}
+      {!loading && !error && MiniPokemons && (
+        <ul className={styles.grid}>
+          {MiniPokemons.map((e) => <PokemonCard key={e.name} miniPokemon={e} />)}
+        </ul>
+      )}
+      {page > 0 && !busqueda && (
+        <Paginator totalPages={totalpages} currentPage={page} setPage={setPage} />
+      )}
     </div>
   );
 }

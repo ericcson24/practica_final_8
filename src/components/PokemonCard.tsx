@@ -4,6 +4,7 @@ import { GetSpriteWithURL } from "@/lib/api"
 import { MiniPokemon } from "@/lib/types"
 import Link from "next/link";
 import { usePokemon } from "@/context/PokemonContext";
+import styles from "./PokemonCard.module.css";
 
 type PokemonStruct = {
     miniPokemon: MiniPokemon
@@ -39,25 +40,27 @@ export default function PokemonCard ({miniPokemon}:PokemonStruct){
     },[])
 
     return(
-        <div>
-            <Link href={`/pokemon/${id}`}>
-            
-            {loading&&<p>cargando...</p>}
-            {error &&<p>{error}</p>}
-            {sprite &&(<ul>
-                <h3>{miniPokemon.name}</h3>
-
-                <img src={sprite}></img>
-            </ul>)}
-            
+        <div className={styles.card}>
+            <Link href={`/pokemon/${id}`} className={styles.cardLink}>
+                {loading && <p className={styles.loading}>Cargando...</p>}
+                {error && <p className={styles.error}>{error}</p>}
+                {sprite && (
+                    <>
+                        <div className={styles.imageWrapper}>
+                            <img src={sprite} alt={miniPokemon.name} />
+                        </div>
+                        <span className={styles.name}>{miniPokemon.name}</span>
+                        <span className={styles.id}>#{id}</span>
+                    </>
+                )}
             </Link>
 
-            <div>
-                {!isFav && (<ul><button onClick={(e)=>FavoritesListPush(miniPokemon)}>Agregar a favorites</button></ul>)}
-                {isFav && (<ul><button onClick={(e)=>FavoritesListPop(miniPokemon)}>Quitar de favorites</button></ul>)}
-                
+            <div className={styles.actions}>
+                {!isFav
+                    ? <button className={styles.btnAdd} onClick={() => FavoritesListPush(miniPokemon)}>+ Favoritos</button>
+                    : <button className={styles.btnRemove} onClick={() => FavoritesListPop(miniPokemon)}>✕ Quitar</button>
+                }
             </div>
-
         </div>
     )
 }

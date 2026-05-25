@@ -4,7 +4,9 @@ import PokemonDetailCard from "@/components/PokemonDetailCard"
 import { GetPokemonById } from "@/lib/api"
 import { PokemonDetail } from "@/lib/types"
 import { useParams } from "next/navigation"
-import { useEffect, useEffectEvent, useState } from "react"
+import { useEffect, useState } from "react"
+import styles from "@/components/PokemonDetailCard.module.css"
+import Link from "next/link"
 
 export default function DetailPage(){
 
@@ -15,8 +17,6 @@ export default function DetailPage(){
     const [error,seterror]=useState<string>("")
     
     const [Pokemons,setPokemons]=useState<PokemonDetail|null>(null)
-    
-    const [page,setPage]=useState<number>(1)
 
     useEffect(()=>{
         const getPokemon=async()=>{
@@ -34,14 +34,13 @@ export default function DetailPage(){
     }, [id])
 
     return(
-        <div>
-            <h1>Pokemon:</h1>
-            {loading && <p>cargando...</p>}
+        <div className={styles.wrapper}>
+            <Link href="/" className={styles.backLink}>← Volver</Link>
+            {loading && <p>Cargando...</p>}
             {error && <p>{error}</p>}
-            {!loading && !error && Pokemons && (<ul>
+            {!loading && !error && Pokemons && (
                 <PokemonDetailCard PokemonDetail={Pokemons}/>
-            </ul>)}
-
+            )}
         </div>
     )
 }
